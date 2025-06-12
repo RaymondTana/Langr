@@ -1,0 +1,11 @@
+date,sampling_rate,lineage,cv_code,family_1,family_0,sentence,language,translation,iso,family_2,wave,espeak_code
+2025-06-13,48000,"['Indo-European', 'Indo-Iranian', 'Iranian']",fa,Indo-Iranian,Indo-European,با ماهیتابه بر سر شوهرش کوفت.,Persian,She hit her husband on the head with a frying pan.,fas,Iranian,"[ 5.68434189e-14  7.38964445e-13  1.08002496e-12 ... -1.56469042e-08
+  4.04977357e-07  3.26697091e-07]",fa
+2025-06-14,48000,"['Indo-European', 'Classical Indo-European', 'Italic', 'Latino-Faliscan', 'Latinic', 'Imperial Latin', 'Romance', 'Italo-Western Romance', 'Western Romance', 'Shifted Western Romance', 'Southwestern Shifted Romance', 'West Ibero-Romance', 'Castilic', 'Spanish']",es,Classical Indo-European,Indo-European,Su experiencia profesional se concentra en el campo de la educación.,Spanish,His professional experience focuses on the field of education.,spa,Italic,"[ 0.00000000e+00 -1.88193319e-13 -1.99442161e-13 ... -5.15774616e-07
+ -9.15083604e-07 -9.71558165e-07]",es
+2025-06-15,48000,"['Indo-European', 'Classical Indo-European', 'Italic', 'Latino-Faliscan', 'Latinic', 'Imperial Latin', 'Romance', 'Italo-Western Romance', 'Western Romance', 'Shifted Western Romance', 'Southwestern Shifted Romance', 'West Ibero-Romance', 'Galician Romance', 'Macro-Portuguese', 'Brazil-Portugal Portuguese', 'Portuguese']",pt,Classical Indo-European,Indo-European,"Naquele dia?, o comerciante deu ao menino permissão para construir a exibição.",Portuguese,"That day, the merchant gave the boy permission to build the display.",por,Italic,"[ 0.00000000e+00  4.03669340e-14  4.74196894e-14 ... -1.21270659e-06
+ -2.24675932e-06 -3.82985854e-06]",pt-br
+2025-06-16,48000,"['Austroasiatic', 'Vietic', 'Viet-Muong', 'Vietnamese']",vi,Vietic,Austroasiatic,quả nhiên trúng tuyển vào trường Quốc Lập,Vietnamese,"Sure enough, he was admitted to the National University.",vie,Viet-Muong,"[0.00000000e+00 0.00000000e+00 0.00000000e+00 ... 1.90132835e-06
+ 7.18296678e-06 1.22913953e-05]",vi-hue
+2025-06-17,48000,"['Sino-Tibetan', 'Sinitic', 'Classical-Middle-Modern Sinitic', 'Middle-Modern Sinitic', 'Yue-Pinghua', 'Yue Chinese']",yue,Sinitic,Sino-Tibetan,睇內容長短嘅,Cantonese,It depends on the length of the content.,yue,Classical-Middle-Modern Sinitic,"[-1.81898940e-12  1.13686838e-12  1.13686838e-12 ...  1.30476951e-06
+ -7.88273155e-07 -1.22205392e-06]",zh-yue

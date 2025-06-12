@@ -15,9 +15,9 @@ English,eng,en,en-uk-wmids,"['Indo-European', 'Classical Indo-European', 'German
 English,eng,en,en-us,"['Indo-European', 'Classical Indo-European', 'Germanic', 'Northwest Germanic', 'West Germanic', 'North Sea Germanic', 'Anglo-Frisian', 'Anglic', 'Later Anglic', 'Middle-Modern English', 'Macro-English', 'English']",Indo-European,Classical Indo-European,Germanic
 English,eng,en,en-wi,"['Indo-European', 'Classical Indo-European', 'Germanic', 'Northwest Germanic', 'West Germanic', 'North Sea Germanic', 'Anglo-Frisian', 'Anglic', 'Later Anglic', 'Middle-Modern English', 'Macro-English', 'English']",Indo-European,Classical Indo-European,Germanic
 Esperanto,epo,eo,eo,"['Artificial Language', 'Artificial Language, 'Artificial Language']",Artificial Language,Artificial Language,Artificial Language
-Estonian,est,et,et,"['Uralic', 'Finno-Ugric, 'Baltic-Finnic']",Uralic,Finno-Ugric,Baltic-Finnic
-Persian,fas,fa,fa,"['Indo-European', 'Indo-Iranian, 'Iranian']",Indo-European,Indo-Iranian,Iranian
-Persian,fas,fa,fa-pin,"['Indo-European', 'Indo-Iranian, 'Iranian']",Indo-European,Indo-Iranian,Iranian
+Estonian,est,et,et,"['Uralic', 'Finno-Ugric', 'Baltic-Finnic']",Uralic,Finno-Ugric,Baltic-Finnic
+Persian,fas,fa,fa,"['Indo-European', 'Indo-Iranian', 'Iranian']",Indo-European,Indo-Iranian,Iranian
+Persian,fas,fa,fa-pin,"['Indo-European', 'Indo-Iranian', 'Iranian']",Indo-European,Indo-Iranian,Iranian
 Finnish,fin,fi,fi,"['Uralic', 'Finnic', 'Coastal Finnic', 'Neva', 'North Finnic', 'Nuclear Finnish', 'Finnish']",Uralic,Finnic,Coastal Finnic
 French,fra,fr,fr-be,"['Indo-European', 'Classical Indo-European', 'Italic', 'Latino-Faliscan', 'Latinic', 'Imperial Latin', 'Romance', 'Italo-Western Romance', 'Western Romance', 'Shifted Western Romance', 'Northwestern Shifted Romance', 'Gallo-Rhaetian', 'Oil', 'Central Oil', 'Macro-French', 'Global French', 'French']",Indo-European,Classical Indo-European,Italic
 French,fra,fr,fr-fr,"['Indo-European', 'Classical Indo-European', 'Italic', 'Latino-Faliscan', 'Latinic', 'Imperial Latin', 'Romance', 'Italo-Western Romance', 'Western Romance', 'Shifted Western Romance', 'Northwestern Shifted Romance', 'Gallo-Rhaetian', 'Oil', 'Central Oil', 'Macro-French', 'Global French', 'French']",Indo-European,Classical Indo-European,Italic
@@ -47,7 +47,7 @@ Spanish,spa,es,es,"['Indo-European', 'Classical Indo-European', 'Italic', 'Latin
 Spanish,spa,es,es-la,"['Indo-European', 'Classical Indo-European', 'Italic', 'Latino-Faliscan', 'Latinic', 'Imperial Latin', 'Romance', 'Italo-Western Romance', 'Western Romance', 'Shifted Western Romance', 'Southwestern Shifted Romance', 'West Ibero-Romance', 'Castilic', 'Spanish']",Indo-European,Classical Indo-European,Italic
 Albanian,sqi,sq,sq,"['Indo-European', 'Classical Indo-European', 'Albanian']",Indo-European,Classical Indo-European,Albanian
 Serbian,srp,sr,sr,"['Indo-European', 'Classical Indo-European', 'Balto-Slavic', 'Slavic', 'South Slavic', 'Western South Slavic', 'Serbian-Croatian-Bosnian', 'Shtokavski', 'New Shtokavian', 'Eastern Herzegovinian Shtokavian', 'Serbian Standard']",Indo-European,Classical Indo-European,Balto-Slavic
-Swahili,swa,sw,sw,"['Niger-Congo', 'Atlantic-Congo, 'Bantoid']",Niger-Congo,Atlantic-Congo,Bantoid
+Swahili,swa,sw,sw,"['Niger-Congo', 'Atlantic-Congo', 'Bantoid']",Niger-Congo,Atlantic-Congo,Bantoid
 Swedish,swe,sv-SE,sv,"['Indo-European', 'Classical Indo-European', 'Germanic', 'Northwest Germanic', 'North Germanic', 'North Scandinavian', 'East-Central Swedic', 'East Swedic', 'Swedish']",Indo-European,Classical Indo-European,Germanic
 Tamil,tam,ta,ta,"['Dravidian', 'South Dravidian', 'South Dravidian I', 'Tamil-Kannada', 'Tamil-Kota', 'Tamil-Toda', 'Tamil-Irula', 'Tamil-Kodagu', 'Tamil-Malayalam', 'Tamiloid', 'Tamil-Paliyan', 'Tamil']",Dravidian,South Dravidian,South Dravidian I
 Turkish,tur,tr,tr,"['Turkic', 'Common Turkic', 'Oghuz', 'Nuclear Oghuz', 'West Oghuz', 'Turkish']",Turkic,Common Turkic,Oghuz
@@ -55,6 +55,6 @@ Vietnamese,vie,vi,vi,"['Austroasiatic', 'Vietic', 'Viet-Muong', 'Vietnamese']",A
 Vietnamese,vie,vi,vi-hue,"['Austroasiatic', 'Vietic', 'Viet-Muong', 'Vietnamese']",Austroasiatic,Vietic,Viet-Muong
 Vietnamese,vie,vi,vi-sgn,"['Austroasiatic', 'Vietic', 'Viet-Muong', 'Vietnamese']",Austroasiatic,Vietic,Viet-Muong
 Cantonese,yue,yue,zh-yue,"['Sino-Tibetan', 'Sinitic', 'Classical-Middle-Modern Sinitic', 'Middle-Modern Sinitic', 'Yue-Pinghua', 'Yue Chinese']",Sino-Tibetan,Sinitic,Classical-Middle-Modern Sinitic
-Chinese,zho,zh-TW,zh,"['Sino-Tibetan', 'Sinitic, 'Sinitic']",Sino-Tibetan,Sinitic,Sinitic
-Chinese,zho,zh-CN,zh,"['Sino-Tibetan', 'Sinitic, 'Sinitic']",Sino-Tibetan,Sinitic,Sinitic
-Chinese,zho,zh-HK,zh,"['Sino-Tibetan', 'Sinitic, 'Sinitic']",Sino-Tibetan,Sinitic,Sinitic
+Chinese,zho,zh-TW,zh,"['Sino-Tibetan', 'Sinitic', 'Sinitic']",Sino-Tibetan,Sinitic,Sinitic
+Chinese,zho,zh-CN,zh,"['Sino-Tibetan', 'Sinitic', 'Sinitic']",Sino-Tibetan,Sinitic,Sinitic
+Chinese,zho,zh-HK,zh,"['Sino-Tibetan', 'Sinitic', 'Sinitic']",Sino-Tibetan,Sinitic,Sinitic
