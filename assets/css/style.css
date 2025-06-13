@@ -12,45 +12,79 @@ body {
     justify-content: center;
     align-items: center;
     color: #333;
+    padding: 10px; /* Add padding for mobile */
 }
 
 .game-container {
     background: white;
     border-radius: 12px;
-    padding: 40px;
+    padding: 20px; /* Reduced from 40px for mobile */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     max-width: 600px;
-    width: 90%;
+    width: 100%; /* Changed from 90% to 100% */
     text-align: center;
     transition: all 0.3s ease;
     border: 1px solid #e1e8ed;
 }
 
+/* Mobile-first approach for larger screens */
+@media (min-width: 768px) {
+    .game-container {
+        padding: 40px;
+        width: 90%;
+    }
+}
+
 .game-title {
-    font-size: 3rem;
+    font-size: 2rem; /* Reduced from 3rem for mobile */
     font-weight: 600;
     color: #2c3e50;
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* Reduced from 30px */
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .game-title {
+        font-size: 3rem;
+        margin-bottom: 30px;
+    }
 }
 
 .guess-section {
-    margin-bottom: 30px;
-    padding: 20px;
+    margin-bottom: 20px; /* Reduced from 30px */
+    padding: 15px; /* Reduced from 20px */
     background: #f8f9fa;
     border-radius: 8px;
     border: 1px solid #e9ecef;
 }
 
+@media (min-width: 768px) {
+    .guess-section {
+        margin-bottom: 30px;
+        padding: 20px;
+    }
+}
+
 .language-select {
-    padding: 12px 20px;
+    padding: 12px 15px; /* Slightly reduced horizontal padding */
     border: 2px solid #dee2e6;
     border-radius: 6px;
     font-size: 16px;
-    margin-right: 10px;
+    margin-right: 0; /* Remove margin for mobile stacking */
+    margin-bottom: 10px; /* Add bottom margin for mobile */
     background: white;
-    min-width: 200px;
+    width: 100%; /* Full width on mobile */
     transition: all 0.3s ease;
     color: #495057;
+}
+
+@media (min-width: 768px) {
+    .language-select {
+        margin-right: 10px;
+        margin-bottom: 0;
+        min-width: 200px;
+        width: auto;
+    }
 }
 
 .language-select:focus {
@@ -60,7 +94,7 @@ body {
 }
 
 .guess-btn {
-    padding: 12px 30px;
+    padding: 12px 20px; /* Slightly reduced horizontal padding */
     background: #3498db;
     color: white;
     border: none;
@@ -70,6 +104,14 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     transform: translateY(0);
+    width: 100%; /* Full width on mobile */
+}
+
+@media (min-width: 768px) {
+    .guess-btn {
+        padding: 12px 30px;
+        width: auto;
+    }
 }
 
 .guess-btn:hover {
@@ -89,8 +131,8 @@ body {
 }
 
 .clue {
-    margin-bottom: 25px;
-    padding: 20px;
+    margin-bottom: 20px; /* Reduced from 25px */
+    padding: 15px; /* Reduced from 20px */
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -98,6 +140,13 @@ body {
     opacity: 0;
     transform: translateY(20px);
     animation: slideIn 0.5s ease forwards;
+}
+
+@media (min-width: 768px) {
+    .clue {
+        margin-bottom: 25px;
+        padding: 20px;
+    }
 }
 
 @keyframes slideIn {
@@ -111,29 +160,52 @@ body {
     font-weight: 600;
     color: #2c3e50;
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 16px; /* Reduced from 18px for mobile */
+}
+
+@media (min-width: 768px) {
+    .clue-header {
+        font-size: 18px;
+    }
 }
 
 .audio-player {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px; /* Reduced from 15px for mobile */
     margin-top: 10px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+@media (min-width: 768px) {
+    .audio-player {
+        gap: 15px;
+        flex-wrap: nowrap;
+    }
 }
 
 .play-btn {
-    width: 50px;
-    height: 50px;
+    width: 45px; /* Slightly smaller for mobile */
+    height: 45px;
     border-radius: 50%;
     background: #27ae60;
     border: none;
     color: white;
-    font-size: 20px;
+    font-size: 18px; /* Slightly smaller */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+@media (min-width: 768px) {
+    .play-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
 }
 
 .play-btn:hover {
@@ -143,18 +215,35 @@ body {
 }
 
 .audio-info {
-    font-size: 14px;
+    font-size: 13px; /* Slightly smaller for mobile */
     color: #666;
+    flex: 1;
+    min-width: 0; /* Allow text to shrink */
+}
+
+@media (min-width: 768px) {
+    .audio-info {
+        font-size: 14px;
+    }
 }
 
 .text-content {
-    font-size: 18px;
+    font-size: 16px; /* Reduced from 18px for mobile */
     line-height: 1.6;
-    padding: 15px;
+    padding: 12px; /* Reduced from 15px */
     background: #f8f9fa;
     border-radius: 6px;
     margin-top: 10px;
     color: #2c3e50;
+    word-wrap: break-word; /* Handle long words */
+    overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+    .text-content {
+        font-size: 18px;
+        padding: 15px;
+    }
 }
 
 .celebration {
@@ -168,14 +257,24 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 20px; /* Add padding for mobile */
 }
 
 .celebration-content {
     background: white;
-    padding: 40px;
+    padding: 30px 20px; /* Reduced horizontal padding for mobile */
     border-radius: 20px;
     text-align: center;
     animation: celebrationPop 0.5s ease;
+    max-width: 90vw; /* Ensure it doesn't overflow */
+    word-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+    .celebration-content {
+        padding: 40px;
+        max-width: none;
+    }
 }
 
 @keyframes celebrationPop {
@@ -186,10 +285,17 @@ body {
 .confetti {
     position: absolute;
     top: 0;
-    width: 10px;
-    height: 10px;
+    width: 8px; /* Slightly smaller for mobile */
+    height: 8px;
     background: #3498db;
     animation: confetti 3s ease-out forwards;
+}
+
+@media (min-width: 768px) {
+    .confetti {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 @keyframes confetti {
@@ -204,9 +310,16 @@ body {
 }
 
 .guess-counter {
-    margin-bottom: 20px;
-    font-size: 16px;
+    margin-bottom: 15px; /* Reduced from 20px */
+    font-size: 15px; /* Slightly smaller for mobile */
     color: #666;
+}
+
+@media (min-width: 768px) {
+    .guess-counter {
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
 }
 
 .incorrect-guess {
@@ -214,6 +327,13 @@ body {
     font-weight: 500;
     margin-top: 10px;
     animation: shake 0.5s ease;
+    font-size: 14px; /* Smaller for mobile */
+}
+
+@media (min-width: 768px) {
+    .incorrect-guess {
+        font-size: inherit;
+    }
 }
 
 @keyframes shake {
@@ -223,16 +343,26 @@ body {
 
 .instructions-btn {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 10px 16px;
+    top: 10px; /* Reduced from 20px */
+    right: 10px; /* Reduced from 20px */
+    padding: 8px 12px; /* Reduced padding */
     background: #6c757d;
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px; /* Smaller for mobile */
     cursor: pointer;
     transition: all 0.3s ease;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+@media (min-width: 768px) {
+    .instructions-btn {
+        top: 20px;
+        right: 20px;
+        padding: 10px 16px;
+        font-size: 14px;
+    }
 }
 
 .instructions-btn:hover {
@@ -254,6 +384,7 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
+    padding: 20px; /* Add padding for mobile */
 }
 
 .modal-overlay.active {
@@ -263,15 +394,22 @@ body {
 
 .modal-content {
     background: white;
-    padding: 30px;
+    padding: 20px; /* Reduced from 30px for mobile */
     border-radius: 12px;
     max-width: 500px;
-    width: 90%;
+    width: 100%; /* Full width on mobile */
     max-height: 80vh;
     overflow-y: auto;
     transform: scale(0.9);
     transition: transform 0.3s ease;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+    .modal-content {
+        padding: 30px;
+        width: 90%;
+    }
 }
 
 .modal-overlay.active .modal-content {
@@ -282,32 +420,55 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
+    margin-bottom: 15px; /* Reduced from 20px */
+    padding-bottom: 12px; /* Reduced from 15px */
     border-bottom: 1px solid #e9ecef;
 }
 
+@media (min-width: 768px) {
+    .modal-header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+}
+
 .modal-title {
-    font-size: 24px;
+    font-size: 20px; /* Reduced from 24px for mobile */
     font-weight: 600;
     color: #2c3e50;
     margin: 0;
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .modal-title {
+        font-size: 24px;
+    }
 }
 
 .close-btn {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 20px; /* Slightly smaller for mobile */
     cursor: pointer;
     color: #6c757d;
     padding: 0;
-    width: 30px;
-    height: 30px;
+    width: 28px; /* Slightly smaller */
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     transition: all 0.3s ease;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+@media (min-width: 768px) {
+    .close-btn {
+        font-size: 24px;
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .close-btn:hover {
@@ -319,21 +480,80 @@ body {
     text-align: left;
     line-height: 1.6;
     color: #495057;
+    font-size: 14px; /* Smaller base font for mobile */
+}
+
+@media (min-width: 768px) {
+    .instructions-content {
+        font-size: 16px;
+    }
 }
 
 .instructions-content h3 {
     color: #2c3e50;
-    margin: 20px 0 10px 0;
-    font-size: 18px;
+    margin: 15px 0 8px 0; /* Reduced margins for mobile */
+    font-size: 16px; /* Reduced from 18px */
+}
+
+@media (min-width: 768px) {
+    .instructions-content h3 {
+        margin: 20px 0 10px 0;
+        font-size: 18px;
+    }
 }
 
 .instructions-content ul,
 .instructions-content ol {
-    margin: 10px 0;
-    padding-left: 20px;
-    list-style-position: inside;
+    margin: 8px 0; /* Reduced from 10px */
+    padding-left: 18px; /* Slightly reduced from 20px */
+    list-style-position: outside; /* Better for mobile */
+}
+
+@media (min-width: 768px) {
+    .instructions-content ul,
+    .instructions-content ol {
+        margin: 10px 0;
+        padding-left: 20px;
+        list-style-position: inside;
+    }
 }
 
 .instructions-content li {
-    margin: 8px 0;
+    margin: 6px 0; /* Reduced from 8px */
+}
+
+@media (min-width: 768px) {
+    .instructions-content li {
+        margin: 8px 0;
+    }
+}
+
+/* Additional mobile-specific improvements */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    
+    .game-container {
+        border-radius: 8px;
+        min-height: auto;
+    }
+    
+    .game-title {
+        font-size: 1.75rem;
+        margin-bottom: 15px;
+    }
+    
+    .modal-content {
+        border-radius: 8px;
+        max-height: 90vh;
+    }
+    
+    .instructions-btn {
+        position: fixed;
+        top: 5px;
+        right: 5px;
+    }
 }
