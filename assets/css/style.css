@@ -557,3 +557,71 @@ body {
         right: 5px;
     }
 }
+
+/* Share button styling */
+.share-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.share-title {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.share-twitter {
+    background: #1da1f2;
+    color: white;
+}
+
+.share-facebook {
+    background: #4267b2;
+    color: white;
+}
+
+.share-linkedin {
+    background: #0077b5;
+    color: white;
+}
+
+.share-reddit {
+    background: #ff4500;
+    color: white;
+}
+
+.share-copy {
+    background: #6c757d;
+    color: white;
+}
+
+.share-copy.copied {
+    background: #28a745;
+}
