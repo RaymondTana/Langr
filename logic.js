@@ -1,12 +1,15 @@
 // Game data - will be populated from CSV
 let gameData = {
     languages: [],
-    todaysLanguage: null
+    todaysLanguage: null,
 };
 
 let currentClueIndex = 0;
 let guessCount = 1;
 let gameEnded = false;
+let previousGuesses = [];
+
+document.getElementById('guessBtn').disabled = true;
 
 // Initialize game
 async function initGame() {
@@ -61,7 +64,7 @@ async function loadGameData() {
         // Set game data
         gameData = {
             // languages: uniqueLanguages,
-            languages: ['Afrikaans', 'Albanian', 'Armenian', 'Bulgarian', 'Cantonese', 'Catalan', 'Chinese', 'Czech', 'Danish', 'Dutch', 'Esperanto', 'Estonian', 'Finnish', 'French', 'Georgian', 'German', 'Greek', 'Hindi', 'Hungarian', 'Icelandic', 'Indonesian', 'Irish', 'Italian', 'Latvian', 'Lithuanian', 'Macedonian', 'Malayalam', 'Nepali', 'Persian', 'Polish', 'Portuguese', 'Punjabi', 'Romanian', 'Russian', 'Serbian', 'Slovak', 'Spanish', 'Swahili', 'Swedish', 'Tamil', 'Turkish', 'Vietnamese', 'Welsh'],
+            languages: ['Abkhaz', 'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Assamese', 'Asturian', 'Azerbaijani', 'Basaa', 'Bashkir', 'Basque', 'Belarusian', 'Bengali', 'Breton', 'Bulgarian', 'Cantonese', 'Catalan', 'Central Kurdish', 'Chuvash', 'Czech', 'Danish', 'Dhivehi', 'Dioula', 'Dutch', 'English', 'Erzya', 'Esperanto', 'Estonian', 'Finnish', 'French', 'Frisian', 'Galician', 'Georgian', 'German', 'Greek', 'Guarani', 'Hakha Chin', 'Hausa', 'Hebrew', 'Hill Mari', 'Hindi', 'Hungarian', 'Icelandic', 'Igbo', 'Indonesian', 'Interlingua', 'Irish', 'Italian', 'Japanese', 'Kabyle', 'Kazakh', 'Kinyarwanda', 'Korean', 'Kurmanji Kurdish', 'Kyrgyz', 'Lao', 'Latvian', 'Lithuanian', 'Luganda', 'Macedonian', 'Malayalam', 'Maltese', 'Mandarin', 'Marathi', 'Meadow Mari', 'Moksha', 'Mongolian', 'Nepali', 'Norwegian Nynorsk', 'Occitan', 'Odia', 'Pashto', 'Persian', 'Polish', 'Portuguese', 'Punjabi', 'Quechua Chanka', 'Romanian', 'Romansh Sursilvan', 'Romansh Vallader', 'Russian', 'Sakha', 'Santali', 'Saraiki', 'Sardinian', 'Serbian', 'Slovak', 'Slovenian', 'Sorbian', 'Upper', 'Spanish', 'Swahili', 'Swedish', 'Taiwanese', 'Tamazight', 'Tamil', 'Tatar', 'Thai', 'Tigre', 'Tigrinya', 'Toki Pona', 'Turkish', 'Turkmen', 'Twi', 'Ukrainian', 'Urdu', 'Uyghur', 'Uzbek', 'Vietnamese', 'Votic', 'Welsh', 'Yoruba'],
             todaysLanguage: todaysRow
         };
         
@@ -153,6 +156,7 @@ function populateLanguageSelect() {
 
 function setupEventListeners() {
     document.getElementById('guessBtn').addEventListener('click', makeGuess);
+    document.getElementById('giveUpBtn').addEventListener('click', giveUp);
     document.getElementById('languageSelect').addEventListener('change', function() {
         document.getElementById('guessBtn').disabled = !this.value;
     });
@@ -166,10 +170,27 @@ function makeGuess() {
     
     if (!selectedLanguage) return;
 
+    if(previousGuesses.includes(selectedLanguage)) {
+        incorrectMessage.textContent = `You already guessed "${selectedLanguage}". Try a different language!`;
+        incorrectMessage.style.display = 'block';
+        setTimeout(() => {
+            incorrectMessage.style.display = 'none';
+        }, 5000);
+        return;
+    }
     if (selectedLanguage === gameData.todaysLanguage.language) {
+        previousGuesses.push(selectedLanguage);
         showCelebration();
         gameEnded = true;
     } else {
+        // Add to previous guesses
+        previousGuesses.push(selectedLanguage);
+
+        if( guessCount >= 6) {
+            showSadCelebration();
+            gameEnded = true;
+            return;
+        }
         // Show incorrect message
         incorrectMessage.textContent = `Incorrect! "${selectedLanguage}" is not the right answer.`;
         incorrectMessage.style.display = 'block';
@@ -177,7 +198,7 @@ function makeGuess() {
         // Hide message after 3 seconds
         setTimeout(() => {
             incorrectMessage.style.display = 'none';
-        }, 3000);
+        }, 5000);
 
         // Show next clue
         showNextClue();
@@ -188,6 +209,14 @@ function makeGuess() {
     // Reset selection
     document.getElementById('languageSelect').value = '';
     document.getElementById('guessBtn').disabled = true;
+}
+
+function giveUp() {
+    if (gameEnded) return;
+    document.getElementById('languageSelect').value = '';
+    document.getElementById('guessBtn').disabled = true;
+    showSadCelebration();
+    gameEnded = true
 }
 
 function showNextClue() {
@@ -278,7 +307,7 @@ function createFamilyClue() {
     const families = [
         gameData.todaysLanguage.family_0,
         gameData.todaysLanguage.family_1,
-        gameData.todaysLanguage.family_2
+        // gameData.todaysLanguage.family_2
     ].filter(f => f && f.trim() !== '');
     
     return `<div class="text-content">${families.join(' → ')}</div>`;
@@ -329,14 +358,15 @@ function playAudio() {
 function showCelebration() {
     const celebration = document.createElement('div');
     celebration.className = 'celebration';
-    const shareText = `🎉 I just guessed the language correctly on Langr in ${guessCount} guess${guessCount > 1 ? 'es' : ''}!`;
+    const shareText = `🎉 I just guessed the language correctly on Langr in ${guessCount} guess${guessCount == 1? '' : 'es'}!`;
     const shareUrl = 'https://raymondtana.github.io/projects/pages/Langr.html';
     celebration.innerHTML = `
         <div class="celebration-content">
             <h2 style="color: #2c3e50; margin-bottom: 20px;">🎉 Congratulations! 🎉</h2>
             <p style="font-size: 18px; margin-bottom: 10px;">You guessed it correctly!</p>
             <p style="font-size: 24px; font-weight: 600; color: #3498db;">The language was ${gameData.todaysLanguage.language}!</p>
-            <p style="margin-top: 20px; color: #666;">You solved it in <strong>${guessCount} guess${guessCount > 1 ? 'es' : ''}</strong>!</p>
+            <p style="margin-top: 20px; color: #666;">You solved it in <strong>${guessCount} guess${guessCount == 1? '' : 'es'}</strong>!</p>
+            <p style="margin-top: 20px; color: #666;">Your previous guess${previousGuesses.length == 1? '' : 'es'}:<br>${previousGuesses.join(' → ')}</p>
             <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Play Again</button>
             <div class="share-section">
                 <div class="share-title">Share your victory!</div>
@@ -369,6 +399,43 @@ function showCelebration() {
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         celebration.appendChild(confetti);
     }
+    
+    document.body.appendChild(celebration);
+}
+
+function showSadCelebration() {
+    const celebration = document.createElement('div');
+    celebration.className = 'celebration';
+    const shareText ="😭 I couldn&#39;t figure out today&#39;s language on Langr";
+    const shareUrl = 'https://raymondtana.github.io/projects/pages/Langr.html';
+    celebration.innerHTML = `
+        <div class="celebration-content">
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">😭 Better luck tomorrow 😭</h2>
+            <p style="font-size: 18px; margin-bottom: 10px;">You&#39;ll get &#39;em next time!</p>
+            <p style="font-size: 24px; font-weight: 600; color: #3498db;">The language was ${gameData.todaysLanguage.language}.</p>
+            <p style="margin-top: 20px; color: #666;">Your previous guess${previousGuesses.length == 1? '' : 'es'}:<br>${previousGuesses.length > 0 ? previousGuesses.join(' → ') : 'none'}</p>
+            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Play Again</button>
+            <div class="share-section">
+                <div class="share-title">Share your victory!</div>
+                <div class="share-buttons">
+                    <a href="#" class="share-btn share-twitter" onclick="shareToTwitter('${encodeURIComponent(shareText)}', '${encodeURIComponent(shareUrl)}'); return false;">
+                        🐦 Twitter
+                    </a>
+                    <a href="#" class="share-btn share-facebook" onclick="shareToFacebook('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                        📘 Facebook
+                    </a>
+                    <a href="#" class="share-btn share-linkedin" onclick="shareToLinkedIn('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                        💼 LinkedIn
+                    </a>
+                    <a href="#" class="share-btn share-reddit" onclick="shareToReddit('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                        🔴 Reddit
+                    </a>
+                    <button class="share-btn share-copy" onclick="copyToClipboard(&quot;${shareText} ${shareUrl}&quot;, this)">
+                        📋 Copy
+                    </button>
+                </div>
+            </div>
+    `;
     
     document.body.appendChild(celebration);
 }

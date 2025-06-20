@@ -93,9 +93,8 @@ body {
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
-.guess-btn {
+.guess-btn, .give-up-btn {
     padding: 12px 20px; /* Slightly reduced horizontal padding */
-    background: #3498db;
     color: white;
     border: none;
     border-radius: 6px;
@@ -105,12 +104,22 @@ body {
     transition: all 0.3s ease;
     transform: translateY(0);
     width: 100%; /* Full width on mobile */
+    margin: 4px 0; /* Add some spacing between buttons */
+}
+
+.guess-btn {
+    background: #3498db;
+}
+
+.give-up-btn {
+    background: #e74c3c;
 }
 
 @media (min-width: 768px) {
-    .guess-btn {
+    .guess-btn, .give-up-btn {
         padding: 12px 30px;
         width: auto;
+        margin: 0 4px; /* Horizontal spacing on desktop */
     }
 }
 
@@ -120,7 +129,13 @@ body {
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
 }
 
-.guess-btn:disabled {
+.give-up-btn:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+}
+
+.guess-btn:disabled, .give-up-btn:disabled {
     background: #bdc3c7;
     cursor: not-allowed;
     transform: none;
