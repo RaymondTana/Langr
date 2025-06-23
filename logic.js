@@ -24,16 +24,14 @@ async function initGame() {
     }
 }
 
-// for finding a random row in the case that today doesn't exist in the CSV
+// For finding a random row in the case that today doesn't exist in the CSV
 function fallbackRow(rows, today) {
-    // Simple hash → 32-bit int
+    // Hash -> 32-bit int
     let h = 0;
     for (let i = 0; i < today.length; i++)
         h = ((h << 5) - h + today.charCodeAt(i)) | 0; // bit-level hash
-
-    // Map hash to 0 … rows.length-1
-    const idx = Math.abs(h) % rows.length;
-    return rows[idx];
+    // Map hash to be an index
+    return rows[Math.abs(h) % rows.length];
 }
 
 // Load and parse CSV data
