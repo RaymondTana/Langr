@@ -2,12 +2,15 @@
 let gameData = {
     languages: [],
     todaysLanguage: null,
+    allRows: [] // Store all CSV data for date exploration
 };
 
 let currentClueIndex = 0;
 let guessCount = 1;
 let gameEnded = false;
 let previousGuesses = [];
+let currentDate = null; // Track current game date
+let isExploringPastDate = false;
 
 document.getElementById('guessBtn').disabled = true;
 
@@ -18,6 +21,7 @@ async function initGame() {
         populateLanguageSelect();
         setupEventListeners();
         showNextClue(); // Show first clue after data is loaded
+        updatePreviousGuessesDisplay(); // Initialize empty display
     } catch (error) {
         console.error('Failed to initialize game:', error);
         showError('Failed to load game data. Please refresh the page.');
@@ -35,7 +39,7 @@ function fallbackRow(rows, today) {
 }
 
 // Load and parse CSV data
-async function loadGameData() {
+async function loadGameData(targetDate = null) {
     try {
         const response = await fetch('game_data.csv');
         if (!response.ok) {
@@ -49,24 +53,32 @@ async function loadGameData() {
             throw new Error('No data found in CSV file');
         }
         
-        // Get today's date in YYYY-MM-DD format
-        const today = localISODate();
+        // Store all rows for date exploration
+        gameData.allRows = rows;
+        
+        // Get target date (either specified or today)
+        const gameDate = targetDate || localISODate();
+        currentDate = gameDate;
+        isExploringPastDate = targetDate !== null && targetDate !== localISODate();
 
-        // Find today's row
-        const todaysRow = rows.find(row => row.date === today);
-        if (!todaysRow) {
-            console.warn(`No row for ${today}; falling back to a random entry.`);
-            todaysRow = fallbackRow(rows, today);
+        // Find the row for the target date
+        let targetRow = rows.find(row => row.date === gameDate);
+        if (!targetRow) {
+            console.warn(`No row for ${gameDate}; falling back to a random entry.`);
+            targetRow = fallbackRow(rows, gameDate);
         }
         
         // Set game data
         gameData = {
-            // languages: uniqueLanguages,
+            ...gameData, // Keep allRows and other existing data
             languages: ['Abkhaz', 'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Assamese', 'Asturian', 'Azerbaijani', 'Basaa', 'Bashkir', 'Basque', 'Belarusian', 'Bengali', 'Breton', 'Bulgarian', 'Cantonese', 'Catalan', 'Central Kurdish', 'Chuvash', 'Czech', 'Danish', 'Dhivehi', 'Dioula', 'Dutch', 'Erzya', 'Esperanto', 'Estonian', 'Finnish', 'French', 'Frisian', 'Galician', 'Georgian', 'German', 'Greek', 'Guarani', 'Hakha Chin', 'Hausa', 'Hebrew', 'Hill Mari', 'Hindi', 'Hungarian', 'Icelandic', 'Igbo', 'Indonesian', 'Interlingua', 'Irish', 'Italian', 'Japanese', 'Kabyle', 'Kazakh', 'Kinyarwanda', 'Korean', 'Kurmanji Kurdish', 'Kyrgyz', 'Lao', 'Latvian', 'Lithuanian', 'Luganda', 'Macedonian', 'Malayalam', 'Maltese', 'Mandarin', 'Marathi', 'Meadow Mari', 'Moksha', 'Mongolian', 'Nepali', 'Norwegian Nynorsk', 'Occitan', 'Odia', 'Pashto', 'Persian', 'Polish', 'Portuguese', 'Punjabi', 'Quechua Chanka', 'Romanian', 'Russian', 'Sakha', 'Santali', 'Saraiki', 'Sardinian', 'Serbian', 'Slovak', 'Slovenian', 'Sorbian', 'Spanish', 'Swahili', 'Swedish', 'Taiwanese', 'Tamazight', 'Tamil', 'Tatar', 'Thai', 'Tigre', 'Tigrinya', 'Toki Pona', 'Turkish', 'Turkmen', 'Twi', 'Ukrainian', 'Urdu', 'Uyghur', 'Uzbek', 'Vietnamese', 'Votic', 'Welsh', 'Yoruba'],
-            todaysLanguage: todaysRow
+            todaysLanguage: targetRow,
+            allRows: rows
         };
         
         console.log('Game data loaded successfully:', gameData);
+        updateDateDisplay();
+        setupDatePickerRestrictions();
         
     } catch (error) {
         console.error('Error loading CSV data:', error);
@@ -144,10 +156,20 @@ function showError(message) {
 
 function populateLanguageSelect() {
     const select = document.getElementById('languageSelect');
+    // Clear existing options except the default one
+    select.innerHTML = '<option value="">Select a language...</option>';
+    
     gameData.languages.forEach(lang => {
         const option = document.createElement('option');
         option.value = lang;
         option.textContent = lang;
+        
+        // Disable if already guessed
+        if (previousGuesses.includes(lang)) {
+            option.disabled = true;
+            option.textContent += ' (already guessed)';
+        }
+        
         select.appendChild(option);
     });
 }
@@ -157,6 +179,16 @@ function setupEventListeners() {
     document.getElementById('giveUpBtn').addEventListener('click', giveUp);
     document.getElementById('languageSelect').addEventListener('change', function() {
         document.getElementById('guessBtn').disabled = !this.value;
+    });
+    
+    // Updated date picker event listener
+    document.getElementById('dateSelect').addEventListener('change', function() {
+        const selectedDate = this.value;
+        if (selectedDate && validateDateSelection(selectedDate)) {
+            loadGameForDate(selectedDate);
+        } else if (selectedDate) {
+            this.value = '';
+        }
     });
 }
 
@@ -176,13 +208,17 @@ function makeGuess() {
         }, 5000);
         return;
     }
+    
     if (selectedLanguage === gameData.todaysLanguage.language) {
         previousGuesses.push(selectedLanguage);
+        updatePreviousGuessesDisplay();
         showCelebration();
         gameEnded = true;
     } else {
         // Add to previous guesses
         previousGuesses.push(selectedLanguage);
+        updatePreviousGuessesDisplay();
+        populateLanguageSelect(); // Refresh dropdown to disable guessed language
 
         if( guessCount >= 6) {
             showSadCelebration();
@@ -260,14 +296,11 @@ function showNextClue() {
 }
 
 function createAudioClue() {
-    // Get today's date in YYYY-MM-DD format
-    const today = localISODate();
-
-    console.log('Today is:', today);
-    console.log('Audio file for today:', gameData.todaysLanguage.wave);
+    console.log('Current date:', currentDate);
+    console.log('Audio file for current date:', gameData.todaysLanguage.wave);
 
     // Get audio file
-    const audioId = "audio-clue-" + today; 
+    const audioId = "audio-clue-" + currentDate; 
     const srcPath = `assets/audio/${gameData.todaysLanguage.wave}`;
 
     return `
@@ -309,6 +342,18 @@ function createFamilyClue() {
     ].filter(f => f && f.trim() !== '');
     
     return `<div class="text-content">${families.join(' → ')}</div>`;
+}
+
+function updatePreviousGuessesDisplay() {
+    const guessesDisplay = document.getElementById('previousGuessesDisplay');
+    if (previousGuesses.length === 0) {
+        guessesDisplay.innerHTML = '<div class="previous-guesses-label">Previous guesses:</div><div class="previous-guesses-content">None yet</div>';
+    } else {
+        guessesDisplay.innerHTML = `
+            <div class="previous-guesses-label">Previous guesses:</div>
+            <div class="previous-guesses-content">${previousGuesses.join(' → ')}</div>
+        `;
+    }
 }
 
 function playAudio() {
@@ -353,40 +398,163 @@ function playAudio() {
     }
 }
 
+function setupDatePickerRestrictions() {
+    const dateInput = document.getElementById('dateSelect');
+    const availableDates = getAvailableDates();
+    
+    if (availableDates.length > 0) {
+        dateInput.min = availableDates[0];
+        dateInput.max = availableDates[availableDates.length - 1];
+    }
+}
+
+function getAvailableDates() {
+    const today = localISODate();
+    return gameData.allRows
+        .map(row => row.date)
+        .filter(date => date <= today)
+        .sort();
+}
+
+function validateDateSelection(selectedDate) {
+    const availableDates = getAvailableDates();
+    
+    if (!availableDates.includes(selectedDate)) {
+        alert('No game data available for this date. Please select a different date.');
+        return false;
+    }
+    
+    return true;
+}
+
+function loadGameForDate(targetDate) {
+    // Reset game state
+    currentClueIndex = 0;
+    guessCount = 1;
+    gameEnded = false;
+    previousGuesses = [];
+    
+    // Clear previous game display
+    document.getElementById('cluesSection').innerHTML = '';
+    document.getElementById('incorrectMessage').style.display = 'none';
+    document.getElementById('guessCount').textContent = guessCount;
+    document.getElementById('languageSelect').value = '';
+    document.getElementById('guessBtn').disabled = true;
+    
+    // Remove any existing celebration overlay
+    const existingCelebration = document.querySelector('.celebration');
+    if (existingCelebration) {
+        existingCelebration.remove();
+    }
+    
+    // Load new game data
+    loadGameData(targetDate).then(() => {
+        populateLanguageSelect();
+        showNextClue();
+        updatePreviousGuessesDisplay();
+    }).catch(error => {
+        console.error('Error loading game for date:', error);
+        showError('Failed to load game data for selected date.');
+    });
+}
+
+function updateDateDisplay() {
+    const dateDisplay = document.getElementById('currentDateDisplay');
+    const today = localISODate();
+    
+    const dateObj = new Date(currentDate + 'T00:00:00');
+    const formattedDate = dateObj.toLocaleDateString();
+    
+    if (currentDate === today) {
+        dateDisplay.textContent = `Today (${formattedDate})`;
+        dateDisplay.className = 'current-date-display today';
+    } else {
+        dateDisplay.textContent = formattedDate;
+        dateDisplay.className = 'current-date-display past-date';
+    }
+}
+
+function getGameDateText() {
+    const today = localISODate();
+    if (currentDate === today) {
+        return "today's";
+    } else {
+        const dateObj = new Date(currentDate + 'T00:00:00');
+        return dateObj.toLocaleDateString('en-US'); // MM/DD/YYYY format
+    }
+}
+
 function showCelebration() {
     const celebration = document.createElement('div');
     celebration.className = 'celebration';
-    const shareText = `🎉 I just guessed the language correctly on Langr in ${guessCount} guess${guessCount == 1? '' : 'es'}!`;
+    const gameDate = getGameDateText();
+    const isToday = currentDate === localISODate();
+    
+    const shareText = isToday 
+        ? `🎉 I just guessed today's language correctly on Langr in ${guessCount} guess${guessCount == 1? '' : 'es'}!`
+        : `🎉 I just guessed the ${gameDate} language correctly on Langr in ${guessCount} guess${guessCount == 1? '' : 'es'}!`;
+    
+    const modalText = isToday 
+        ? `You solved today's Langr in <strong>${guessCount} guess${guessCount == 1? '' : 'es'}</strong>!`
+        : `You solved Langr for ${gameDate} in <strong>${guessCount} guess${guessCount == 1? '' : 'es'}</strong>!`;
+    
     const shareUrl = 'https://raymondtana.github.io/projects/pages/Langr.html';
+    
     celebration.innerHTML = `
         <div class="celebration-content">
             <h2 style="color: #2c3e50; margin-bottom: 20px;">🎉 Congratulations! 🎉</h2>
             <p style="font-size: 18px; margin-bottom: 10px;">You guessed it correctly!</p>
             <p style="font-size: 24px; font-weight: 600; color: #3498db;">The language was ${gameData.todaysLanguage.language}!</p>
-            <p style="margin-top: 20px; color: #666;">You solved it in <strong>${guessCount} guess${guessCount == 1? '' : 'es'}</strong>!</p>
+            <p style="margin-top: 20px; color: #666;">${modalText}</p>
             <p style="margin-top: 20px; color: #666;">Your previous guess${previousGuesses.length == 1? '' : 'es'}:<br>${previousGuesses.join(' → ')}</p>
             <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Play Again</button>
             <div class="share-section">
                 <div class="share-title">Share your victory!</div>
                 <div class="share-buttons">
-                    <a href="#" class="share-btn share-twitter" onclick="shareToTwitter('${encodeURIComponent(shareText)}', '${encodeURIComponent(shareUrl)}'); return false;">
+                    <button class="share-btn share-twitter" data-share="twitter">
                         🐦 Twitter
-                    </a>
-                    <a href="#" class="share-btn share-facebook" onclick="shareToFacebook('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                    </button>
+                    <button class="share-btn share-facebook" data-share="facebook">
                         📘 Facebook
-                    </a>
-                    <a href="#" class="share-btn share-linkedin" onclick="shareToLinkedIn('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                    </button>
+                    <button class="share-btn share-linkedin" data-share="linkedin">
                         💼 LinkedIn
-                    </a>
-                    <a href="#" class="share-btn share-reddit" onclick="shareToReddit('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                    </button>
+                    <button class="share-btn share-reddit" data-share="reddit">
                         🔴 Reddit
-                    </a>
-                    <button class="share-btn share-copy" onclick="copyToClipboard('${shareText} ${shareUrl}', this)">
+                    </button>
+                    <button class="share-btn share-copy" data-share="copy">
                         📋 Copy
                     </button>
                 </div>
             </div>
+        </div>
     `;
+    
+    // Add event listeners to share buttons
+    const shareButtons = celebration.querySelectorAll('[data-share]');
+    shareButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const shareType = this.getAttribute('data-share');
+            switch(shareType) {
+                case 'twitter':
+                    shareToTwitter(encodeURIComponent(shareText), encodeURIComponent(shareUrl));
+                    break;
+                case 'facebook':
+                    shareToFacebook(encodeURIComponent(shareUrl), encodeURIComponent(shareText));
+                    break;
+                case 'linkedin':
+                    shareToLinkedIn(encodeURIComponent(shareUrl), encodeURIComponent(shareText));
+                    break;
+                case 'reddit':
+                    shareToReddit(encodeURIComponent(shareUrl), encodeURIComponent(shareText));
+                    break;
+                case 'copy':
+                    copyToClipboard(shareText + ' ' + shareUrl, this);
+                    break;
+            }
+        });
+    });
     
     // Add confetti
     for (let i = 0; i < 50; i++) {
@@ -404,36 +572,73 @@ function showCelebration() {
 function showSadCelebration() {
     const celebration = document.createElement('div');
     celebration.className = 'celebration';
-    const shareText ="😭 I couldn&#39;t figure out today&#39;s language on Langr";
+    const gameDate = getGameDateText();
+    const isToday = currentDate === localISODate();
+    
+    const shareText = isToday 
+        ? "😭 I couldn't figure out today's language on Langr"
+        : `😭 I couldn't figure out the ${gameDate} language on Langr`;
+    
+    const modalText = isToday 
+        ? "You'll get today's language next time!"
+        : `You'll get the ${gameDate} language next time!`;
+    
     const shareUrl = 'https://raymondtana.github.io/projects/pages/Langr.html';
+    
     celebration.innerHTML = `
         <div class="celebration-content">
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">😭 Better luck tomorrow 😭</h2>
-            <p style="font-size: 18px; margin-bottom: 10px;">You&#39;ll get &#39;em next time!</p>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">😭 Better luck next time 😭</h2>
+            <p style="font-size: 18px; margin-bottom: 10px;">${modalText}</p>
             <p style="font-size: 24px; font-weight: 600; color: #3498db;">The language was ${gameData.todaysLanguage.language}.</p>
             <p style="margin-top: 20px; color: #666;">Your previous guess${previousGuesses.length == 1? '' : 'es'}:<br>${previousGuesses.length > 0 ? previousGuesses.join(' → ') : 'none'}</p>
             <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Play Again</button>
             <div class="share-section">
-                <div class="share-title">Share your victory!</div>
+                <div class="share-title">Share your attempt!</div>
                 <div class="share-buttons">
-                    <a href="#" class="share-btn share-twitter" onclick="shareToTwitter('${encodeURIComponent(shareText)}', '${encodeURIComponent(shareUrl)}'); return false;">
+                    <button class="share-btn share-twitter" data-share="twitter">
                         🐦 Twitter
-                    </a>
-                    <a href="#" class="share-btn share-facebook" onclick="shareToFacebook('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                    </button>
+                    <button class="share-btn share-facebook" data-share="facebook">
                         📘 Facebook
-                    </a>
-                    <a href="#" class="share-btn share-linkedin" onclick="shareToLinkedIn('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                    </button>
+                    <button class="share-btn share-linkedin" data-share="linkedin">
                         💼 LinkedIn
-                    </a>
-                    <a href="#" class="share-btn share-reddit" onclick="shareToReddit('${encodeURIComponent(shareUrl)}', '${encodeURIComponent(shareText)}'); return false;">
+                    </button>
+                    <button class="share-btn share-reddit" data-share="reddit">
                         🔴 Reddit
-                    </a>
-                    <button class="share-btn share-copy" onclick="copyToClipboard(&quot;${shareText} ${shareUrl}&quot;, this)">
+                    </button>
+                    <button class="share-btn share-copy" data-share="copy">
                         📋 Copy
                     </button>
                 </div>
             </div>
+        </div>
     `;
+    
+    // Add event listeners to share buttons
+    const shareButtons = celebration.querySelectorAll('[data-share]');
+    shareButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const shareType = this.getAttribute('data-share');
+            switch(shareType) {
+                case 'twitter':
+                    shareToTwitter(encodeURIComponent(shareText), encodeURIComponent(shareUrl));
+                    break;
+                case 'facebook':
+                    shareToFacebook(encodeURIComponent(shareUrl), encodeURIComponent(shareText));
+                    break;
+                case 'linkedin':
+                    shareToLinkedIn(encodeURIComponent(shareUrl), encodeURIComponent(shareText));
+                    break;
+                case 'reddit':
+                    shareToReddit(encodeURIComponent(shareUrl), encodeURIComponent(shareText));
+                    break;
+                case 'copy':
+                    copyToClipboard(shareText + ' ' + shareUrl, this);
+                    break;
+            }
+        });
+    });
     
     document.body.appendChild(celebration);
 }

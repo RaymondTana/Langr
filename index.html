@@ -16,14 +16,37 @@
     <div class="game-container">
         <h1 class="game-title">Langr</h1>
         
+        <div class="game-info">
+            <div class="game-stats">
+                <div class="guess-counter">Guess: <span id="guessCount">1</span></div>
+                <div class="date-tools">
+                <span id="currentDateDisplay" class="current-date-display"></span>
+                <div class="calendar-picker">
+                    <button class="calendar-icon" type="button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"/>
+                            <path d="M5 22h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM19 8H5v12h14V8z"/>
+                        </svg>
+                    </button>
+                    <input type="date" class="hidden-date-input" id="dateSelect">
+                </div>
+            </div>
+            </div>
+        </div>
+        
         <div class="guess-section">
-            <div class="guess-counter">Guess: <span id="guessCount">1</span></div>
-            <select class="language-select" id="languageSelect">
-                <option value="">Select a language...</option>
-            </select>
-            <button class="guess-btn" id="guessBtn">Guess!</button>
-            <button class="give-up-btn" id="giveUpBtn">Give Up</button>
+            <div class="guess-controls">
+                <select class="language-select" id="languageSelect">
+                    <option value="">Select a language...</option>
+                </select>
+                <button class="guess-btn" id="guessBtn">Guess!</button>
+                <button class="give-up-btn" id="giveUpBtn">Give Up</button>
+            </div>
             <div id="incorrectMessage" class="incorrect-guess" style="display: none;"></div>
+        </div>
+
+        <div id="previousGuessesDisplay" class="previous-guesses-container">
+            <div class="previous-guesses-label">Previous guesses: <span style="color: #999;">None yet</span></div>
         </div>
 
         <div class="clues-section" id="cluesSection">
@@ -66,6 +89,7 @@
             </div>
         </div>
     </div>
+
     <script src="logic.js"></script>
 </body>
 </html>
