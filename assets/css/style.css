@@ -12,19 +12,20 @@ body {
     justify-content: center;
     align-items: center;
     color: #333;
-    padding: 10px; /* Add padding for mobile */
+    padding: 10px;
 }
 
 .game-container {
     background: white;
     border-radius: 12px;
-    padding: 20px; /* Reduced from 40px for mobile */
+    padding: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     max-width: 600px;
-    width: 100%; /* Changed from 90% to 100% */
+    width: 100%;
     text-align: center;
     transition: all 0.3s ease;
     border: 1px solid #e1e8ed;
+    position: relative;
 }
 
 /* Mobile-first approach for larger screens */
@@ -82,6 +83,10 @@ body {
     color: #495057;
     flex: 1;
     min-width: 200px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .language-select:focus {
@@ -134,7 +139,12 @@ body {
     .guess-controls {
         flex-direction: column;
     }
-    
+
+    .language-select {
+        min-width: 0;
+        width: 100%;
+    }
+
     .guess-btn, .give-up-btn {
         width: 100%;
     }
@@ -226,6 +236,12 @@ body {
     background: #229954;
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.play-btn:disabled {
+    background: #27ae60;
+    cursor: pointer;
+    opacity: 1;
 }
 
 .audio-info {
@@ -344,31 +360,45 @@ body {
 
 .instructions-btn {
     position: absolute;
-    top: 10px; /* Reduced from 20px */
-    right: 10px; /* Reduced from 20px */
-    padding: 8px 12px; /* Reduced padding */
-    background: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px; /* Smaller for mobile */
+    top: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    color: #95a5a6;
+    border: 2px solid #95a5a6;
+    border-radius: 50%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
     cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10; /* Ensure it's above other elements */
+    transition: all 0.2s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 @media (min-width: 768px) {
     .instructions-btn {
-        top: 20px;
-        right: 20px;
-        padding: 10px 16px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
     }
 }
 
 .instructions-btn:hover {
-    background: #5a6268;
-    transform: translateY(-1px);
+    color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.instructions-btn:active {
+    color: #3498db;
+    border-color: #3498db;
+    transform: scale(0.95);
 }
 
 .modal-overlay {
@@ -536,26 +566,28 @@ body {
         align-items: flex-start;
         padding-top: 20px;
     }
-    
+
     .game-container {
         border-radius: 8px;
         min-height: auto;
     }
-    
+
     .game-title {
         font-size: 1.75rem;
         margin-bottom: 15px;
     }
-    
+
     .modal-content {
         border-radius: 8px;
         max-height: 90vh;
     }
-    
+
     .instructions-btn {
-        position: fixed;
-        top: 5px;
-        right: 5px;
+        top: 10px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
     }
 }
 
@@ -663,6 +695,23 @@ body {
     font-weight: 500;
     color: #495057;
     line-height: 32px; /* Match the calendar icon height */
+}
+
+/* Mobile adjustments for game stats */
+@media (max-width: 480px) {
+    .guess-counter {
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .current-date-display {
+        font-size: 13px;
+        line-height: 28px;
+    }
+
+    .date-tools {
+        gap: 6px;
+    }
 }
 
 .current-date-display.today {

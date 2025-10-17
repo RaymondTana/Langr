@@ -180,7 +180,7 @@ function setupEventListeners() {
     document.getElementById('languageSelect').addEventListener('change', function() {
         document.getElementById('guessBtn').disabled = !this.value;
     });
-    
+
     // Updated date picker event listener
     document.getElementById('dateSelect').addEventListener('change', function() {
         const selectedDate = this.value;
@@ -188,6 +188,16 @@ function setupEventListeners() {
             loadGameForDate(selectedDate);
         } else if (selectedDate) {
             this.value = '';
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const playBtn = e.target.closest('.play-btn');
+        if (playBtn) {
+            const audioId = playBtn.getAttribute('data-audio-id');
+            if (audioId) {
+                togglePlay(audioId, playBtn);
+            }
         }
     });
 }
@@ -300,14 +310,14 @@ function createAudioClue() {
     console.log('Audio file for current date:', gameData.todaysLanguage.wave);
 
     // Get audio file
-    const audioId = "audio-clue-" + currentDate; 
+    const audioId = "audio-clue-" + currentDate;
     const srcPath = `assets/audio/${gameData.todaysLanguage.wave}`;
 
     return `
         <div class="audio-player">
             <audio id="${audioId}" src="${srcPath}"></audio>
 
-            <button class="play-btn" onclick="togglePlay('${audioId}', this)">
+            <button class="play-btn" data-audio-id="${audioId}">
                 ▶
             </button>
 
@@ -322,12 +332,28 @@ function createAudioClue() {
 function togglePlay(audioId, btn) {
     const player = document.getElementById(audioId);
 
+    // Prevent multiple rapid clicks
+    if (btn.disabled) return;
+
     if (player.paused) {
+        // Disable button temporarily to prevent rapid clicks
+        btn.disabled = true;
+
         // ensure we always start from the beginning when replaying
         player.currentTime = 0;
-        player.play();
-        btn.textContent = "⏸";
-        player.onended = () => (btn.textContent = "▶");
+
+        player.play().then(() => {
+            btn.textContent = "⏸";
+            btn.disabled = false;
+        }).catch(error => {
+            console.error('Error playing audio:', error);
+            btn.disabled = false;
+        });
+
+        player.onended = () => {
+            btn.textContent = "▶";
+            btn.disabled = false;
+        };
     } else {
         player.pause();
         btn.textContent = "▶";
@@ -337,8 +363,7 @@ function togglePlay(audioId, btn) {
 function createFamilyClue() {
     const families = [
         gameData.todaysLanguage.family_0,
-        gameData.todaysLanguage.family_1,
-        // gameData.todaysLanguage.family_2
+        gameData.todaysLanguage.family_1
     ].filter(f => f && f.trim() !== '');
     
     return `<div class="text-content">${families.join(' → ')}</div>`;
@@ -353,48 +378,6 @@ function updatePreviousGuessesDisplay() {
             <div class="previous-guesses-label">Previous guesses:</div>
             <div class="previous-guesses-content">${previousGuesses.join(' → ')}</div>
         `;
-    }
-}
-
-function playAudio() {
-    // Play the actual audio file
-    const playBtn = event.target;
-    const audioFile = gameData.todaysLanguage.wave;
-    
-    if (audioFile && audioFile.trim() !== '') {
-        try {
-            const audio = new Audio(audioFile);
-            
-            // Update button to show playing state
-            playBtn.innerHTML = '⏸';
-            playBtn.style.background = '#e74c3c';
-            
-            // Play audio
-            audio.play().catch(error => {
-                console.error('Error playing audio:', error);
-                alert('Could not play audio file. Make sure the file exists and is accessible.');
-            });
-            
-            // Reset button when audio ends
-            audio.addEventListener('ended', () => {
-                playBtn.innerHTML = '▶';
-                playBtn.style.background = '#27ae60';
-            });
-            
-            // Reset button after 30 seconds max (in case audio doesn't fire 'ended' event)
-            setTimeout(() => {
-                playBtn.innerHTML = '▶';
-                playBtn.style.background = '#27ae60';
-            }, 30000);
-            
-        } catch (error) {
-            console.error('Error creating audio element:', error);
-            alert('Could not load audio file.');
-            playBtn.innerHTML = '▶';
-            playBtn.style.background = '#27ae60';
-        }
-    } else {
-        alert('No audio file specified for today\'s language.');
     }
 }
 
