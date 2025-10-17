@@ -564,7 +564,7 @@ function showSadCelebration() {
     
     const modalText = isToday 
         ? "You'll get today's language next time!"
-        : `You'll get the ${gameDate} language next time!`;
+        : "We can only go up from here!";
     
     const shareUrl = 'https://raymondtana.github.io/projects/pages/Langr.html';
     
