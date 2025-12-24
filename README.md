@@ -8,7 +8,7 @@ This repository houses the code for a language guessing game. The concept of the
 ## Data
 We make use of many sources of data in order to create this game. 
 
-Spoken samples, sentence text, and other speaker metadata are sourced from `Mozilla CommonVoice`. And language metadata was mainly sourced from `Glottolog`, including a language's family lineage. The `langcodes` library helps to translate between each library using standard ISO 639‑3 codes. 
+Spoken samples, sentence text, and other speaker metadata are sourced from `Mozilla Common Voice (v24)`. And language metadata was mainly sourced from `Glottolog`, including a language's family lineage. The `langcodes` library helps to translate between each library using standard ISO 639‑3 codes. 
 
 ## Work in Progress
 Please alert us of any inconsistencies or additional languages you'd like to suggest we include. It takes time to incorporate a new language, especially if we wish to programmaticaly source it using spoken examples from existing libraries. 
